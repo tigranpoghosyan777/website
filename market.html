@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Գեղեցիկ Տեղական Առևտր</title>
+  <style>
+    /* Գլոբալ ոճեր */
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #000;
+      color: #FFD700; /* ոսկևրագույն */
+    }
+    header {
+      background: #000;
+      color: #FFD700;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 2px solid #FFD700;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    nav a {
+      color: #FFD700;
+      margin-left: 20px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    .container {
+      padding: 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+    /* Form կոնտեյներ */
+    .form-container, .market-container, .basket-container, .profile-container, .card-container {
+      background: #111;
+      padding: 25px;
+      margin: 20px 0;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    .form-container h2, .market-container h2, .basket-container h2, .profile-container h2, .card-container h2 {
+      margin-top: 0;
+      color: #FFD700;
+    }
+    form input[type="text"],
+    form input[type="password"],
+    form input[type="email"],
+    form input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #FFD700;
+      border-radius: 4px;
+      background: #222;
+      color: #FFD700;
+    }
+    form input[type="submit"], button {
+      padding: 10px 20px;
+      background: #FFD700;
+      color: #000;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    form input[type="submit"]:hover, button:hover {
+      background: #e6c200;
+    }
+    /* Ապրանքների ոճեր */
+    .products {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr); /* Մակսիմում 4 ապրանք մեկ տողում */
+      gap: 20px;
+    }
+    .product {
+      background: #222;
+      border: 1px solid #FFD700;
+      border-radius: 6px;
+      padding: 15px;
+      text-align: center;
+      transition: transform 0.2s;
+    }
+    .product:hover {
+      transform: translateY(-5px);
+    }
+    .product h3 {
+      font-size: 18px;
+      margin: 10px 0;
+      color: #FFD700;
+    }
+    .product p {
+      margin: 8px 0;
+    }
+    /* Զամբյուղի ցուցակը */
+    .basket-container ul {
+      list-style: none;
+      padding: 0;
+    }
+    .basket-container li {
+      padding: 8px;
+      border-bottom: 1px solid #FFD700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logout {
+      cursor: pointer;
+      text-decoration: underline;
+      font-size: 14px;
+      margin-left: 10px;
+      color: #FFD700;
+    }
+    /* Վեբ էջի բաժինները */
+    .nav-section {
+      display: none;
+    }
+    .active-section {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Գեղեցիկ Տեղական Առևտր</h1>
+    <nav>
+      <a href="#" onclick="showSection('market')">Ապրանքներ</a>
+      <a href="#" onclick="showSection('basket')">Զամբյուղ</a>
+      <a href="#" onclick="showSection('profile')">Պրոֆիլ</a>
+      <a href="#" onclick="showSection('card')">Քարտի Հեղինակագիր</a>
+      <span id="userStatus"></span>
+    </nav>
+  </header>
+  
+  <div class="container">
+    <!-- Մուտք և Գրանցման բաժին -->
+    <div id="authSection" class="nav-section active-section">
+      <!-- Մուտք (Login) ձև -->
+      <div class="form-container" id="loginFormContainer">
+        <h2>Մուտք</h2>
+        <form id="loginForm">
+          <input type="text" id="loginUsername" placeholder="Օգտագործողի անուն" required />
+          <input type="password" id="loginPassword" placeholder="Գաղտնաբառ" required />
+          <input type="submit" value="Մուտք" />
+        </form>
+        <p>Դուք գրանցված չեք? <a href="#" onclick="toggleAuthForms()">Գրանցում</a></p>
+      </div>
+      <!-- Գրանցման (Sign Up) ձև -->
+      <div class="form-container" id="signupFormContainer" style="display:none;">
+        <h2>Գրանցում</h2>
+        <form id="signupForm">
+          <input type="text" id="signupUsername" placeholder="Ընտրեք օգտատիրոջ անուն" required />
+          <input type="email" id="signupEmail" placeholder="Էլ. հասցե" required />
+          <input type="password" id="signupPassword" placeholder="Ընտրեք գաղտնաբառ" required />
+          <input type="submit" value="Գրանցում" />
+        </form>
+        <p>Նախքան գրանցում, մուտք կատարեք: <a href="#" onclick="toggleAuthForms()">Մուտք</a></p>
+      </div>
+    </div>
+    
+    <!-- Ապրանքների բաժին -->
+    <div id="market" class="nav-section">
+      <div class="market-container">
+        <h2>Ապրանքներ</h2>
+        <div class="products" id="productsList">
+          <!-- Ապրանքները կցուցադրվեն այստեղ -->
+        </div>
+      </div>
+    </div>
+    
+    <!-- Զամբյուղի բաժին -->
+    <div id="basket" class="nav-section">
+      <div class="basket-container">
+        <h2>Ձեր Զամբյուղը</h2>
+        <ul id="basketItems"></ul>
+        <button id="checkoutBtn">Վճարում</button>
+      </div>
+    </div>
+    
+    <!-- Պրոֆիլի բաժին -->
+    <div id="profile" class="nav-section">
+      <div class="profile-container">
+        <h2>Ձեր Պրոֆիլը</h2>
+        <p><strong>Օգտագործողի անուն:</strong> <span id="profileUsername"></span></p>
+        <p><strong>Էլ. հասցե:</strong> <span id="profileEmail"></span></p>
+        <button onclick="logout()">Դուրս գալ</button>
+      </div>
+    </div>
+    
+    <!-- Քարտի տեղեկատվության բաժին -->
+    <div id="card" class="nav-section">
+      <div class="card-container">
+        <h2>Քարտի Մանրամասներ</h2>
+        <form id="cardForm">
+          <input type="text" id="cardName" placeholder="Քարտահավատարի անունը" required />
+          <input type="text" id="cardNumber" placeholder="Քարտի համար" required />
+          <input type="number" id="cardExpiry" placeholder="Ավարտ (ՄՄՏՏ)" required />
+          <input type="number" id="cardCVV" placeholder="CVV" required />
+          <input type="submit" value="Պահպանել Քարտը" />
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Տեղական կիրառման համար, այս վերսիան պահում է բոլոր տվյալները RAM-ում:
+    let currentUser = null;
+    const users = []; // Գրանցված օգտատերերը
+
+    // Զամբյուղի տվյալների մասիվ
+    let basket = [];
+
+    // Սահմանում ենք 80 ապրանք տարբեր կատեգորիաներով:
+    const categories = ['Գիրքեր', 'Էլեկտրոնիկա', 'Հագուստ', 'Ակսեսուարներ'];
+    const products = [];
+    for(let i = 1; i <= 80; i++){
+      const category = categories[i % categories.length];
+      products.push({
+        id: i,
+        name: `${category} ապրանք ${i}`,
+        category: category,
+        price: (Math.random() * 100 + 10).toFixed(2)
+      });
+    }
+    
+    // Login/Sign Up ձևերի փոխում
+    function toggleAuthForms() {
+      const loginContainer = document.getElementById('loginFormContainer');
+      const signupContainer = document.getElementById('signupFormContainer');
+      if (loginContainer.style.display === 'none') {
+        loginContainer.style.display = 'block';
+        signupContainer.style.display = 'none';
+      } else {
+        loginContainer.style.display = 'none';
+        signupContainer.style.display = 'block';
+      }
+    }
+    
+    // Ցուցադրման բաժինները փոխելու ֆունկցիա
+    function showSection(sectionId) {
+      const sections = document.querySelectorAll('.nav-section');
+      sections.forEach(section => {
+        section.classList.remove('active-section');
+      });
+      document.getElementById(sectionId).classList.add('active-section');
+    }
+    
+    // Ապրանքների ցուցադրման ֆունկցիա
+    function renderProducts() {
+      const productsList = document.getElementById('productsList');
+      productsList.innerHTML = '';
+      products.forEach(product => {
+        const prodDiv = document.createElement('div');
+        prodDiv.className = 'product';
+        prodDiv.innerHTML = `
+          <h3>${product.name}</h3>
+          <p>Կատեգորիա: ${product.category}</p>
+          <p>$${product.price}</p>
+          <button onclick="addToBasket(${product.id})">Ավելացնել Զամբյուղին</button>
+        `;
+        productsList.appendChild(prodDiv);
+      });
+    }
+    
+    // Ապրանքի ավելացում զամբյուղում
+    function addToBasket(productId) {
+      const product = products.find(p => p.id === productId);
+      if (product) {
+        basket.push(product);
+        renderBasket();
+      }
+    }
+    
+    // Զամբյուղի տարրերի ցուցադրում
+    function renderBasket() {
+      const basketItems = document.getElementById('basketItems');
+      basketItems.innerHTML = '';
+      basket.forEach((item, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `${item.name} - $${item.price} <button onclick="removeFromBasket(${index})">Հեռացնել</button>`;
+        basketItems.appendChild(li);
+      });
+    }
+    
+    // Զամբյուղից տարր հեռացնել
+    function removeFromBasket(index) {
+      basket.splice(index, 1);
+      renderBasket();
+    }
+    
+    // Վճարման ժամանակ՝ ստուգում ենք արդյոք օգտագործողը ունի քարտի տվյալներ:
+    document.getElementById('checkoutBtn').addEventListener('click', () => {
+      if (basket.length === 0) {
+        alert('Ձեր զամբյուղը դատարկ է:');
+        return;
+      }
+      if (!currentUser) {
+        alert('Խնդրում ենք մուտք գործել վճարման համար:');
+        return;
+      }
+      if (!currentUser.card) {
+        alert('Վճարման համար անհրաժեշտ է քարտի տվյալներ: Խնդրում ենք լրացնել ձեր քարտի տեղեկությունները:');
+        // նավիգացիա քարտի էջին
+        showSection('card');
+        return;
+      }
+      alert('Վճարում կատարված է: Ընդհանուր ապրանքներ՝ ' + basket.length);
+      basket = [];
+      renderBasket();
+    });
+    
+    // Մուտքի ձևի հղում
+    document.getElementById('loginForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const username = document.getElementById('loginUsername').value;
+      const password = document.getElementById('loginPassword').value;
+      const user = users.find(u => u.username === username && u.password === password);
+      if (user) {
+        currentUser = user;
+        onLoginSuccess();
+      } else {
+        alert('Սխալ տվյալներ: Խնդրում ենք ստուգել և փորձել կրկին:');
+      }
+    });
+    
+    // Գրանցման ձևի հղում
+    document.getElementById('signupForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const username = document.getElementById('signupUsername').value;
+      const email = document.getElementById('signupEmail').value;
+      const password = document.getElementById('signupPassword').value;
+      if (users.find(u => u.username === username)) {
+        alert('Օգտագործողի անունը արդեն զբաղված է:');
+        return;
+      }
+      const newUser = { username, email, password, card: null };
+      users.push(newUser);
+      currentUser = newUser;
+      onLoginSuccess();
+    });
+    
+    // Քարտի մանրամասների ձևի հղում
+    document.getElementById('cardForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!currentUser) {
+        alert('Խնդրում ենք առաջին հերթին մուտք գործել:');
+        return;
+      }
+      const cardName = document.getElementById('cardName').value;
+      const cardNumber = document.getElementById('cardNumber').value;
+      const cardExpiry = document.getElementById('cardExpiry').value;
+      const cardCVV = document.getElementById('cardCVV').value;
+      currentUser.card = { cardName, cardNumber, cardExpiry, cardCVV };
+      alert('Քարտի տվյալները պահպանված են:');
+    });
+    
+    // Հաջող մուտք/գրանցում
+    function onLoginSuccess() {
+      document.getElementById('authSection').style.display = 'none';
+      document.getElementById('userStatus').innerHTML = `Մուտք գործած է՝ <strong>${currentUser.username}</strong> (<span class="logout" onclick="logout()">Դուրս գալ</span>)`;
+      document.getElementById('profileUsername').innerText = currentUser.username;
+      document.getElementById('profileEmail').innerText = currentUser.email;
+      renderProducts();
+      showSection('market');
+    }
+    
+    // Դուրս գալ համակարգը
+    function logout() {
+      currentUser = null;
+      basket = [];
+      location.reload();
+    }
+  </script>
+</body>
+</html>
