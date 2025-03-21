@@ -3,18 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Գեղեցիկ Տեղական Առևտր</title>
+  <title>Օնլայն Մարկետ</title>
   <style>
-    /* Գլոբալ ոճեր */
+    /* Global Styles */
     body {
       margin: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: #000;
-      color: #FFD700; /* ոսկևրագույն */
+      color: #FFD700; /* Gold */
     }
     header {
       background: #000;
-      color: #FFD700;
       padding: 15px 30px;
       display: flex;
       justify-content: space-between;
@@ -27,30 +26,65 @@
     header h1 {
       margin: 0;
       font-size: 24px;
+      cursor: pointer;
     }
-    nav a {
+    /* Dropdown Navigation */
+    nav#mainNav {
+      position: relative;
+    }
+    .nav-toggle {
+      background: #FFD700;
+      color: #000;
+      border: none;
+      padding: 10px 15px;
+      font-size: 16px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .nav-dropdown {
+      display: none;
+      flex-direction: column;
+      position: absolute;
+      right: 0;
+      background: #000;
+      margin-top: 10px;
+      border: 1px solid #FFD700;
+      border-radius: 4px;
+      overflow: hidden;
+      z-index: 2000;
+    }
+    .nav-dropdown a {
       color: #FFD700;
-      margin-left: 20px;
+      padding: 10px;
       text-decoration: none;
-      font-weight: bold;
+      border-bottom: 1px solid #FFD700;
+      display: block;
     }
-    nav a:hover {
-      text-decoration: underline;
+    .nav-dropdown a:hover {
+      background: #222;
     }
+    .nav-dropdown a:last-child {
+      border-bottom: none;
+    }
+    /* Container */
     .container {
       padding: 20px;
       max-width: 1200px;
       margin: auto;
     }
-    /* Form կոնտեյներ */
-    .form-container, .market-container, .basket-container, .profile-container, .card-container {
+    /* Sections: Form, Admin, Home, etc. */
+    .form-container, .market-container, .basket-container, 
+    .profile-container, .card-container, .admin-container, 
+    .home-container {
       background: #111;
       padding: 25px;
       margin: 20px 0;
       border-radius: 8px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.5);
     }
-    .form-container h2, .market-container h2, .basket-container h2, .profile-container h2, .card-container h2 {
+    .form-container h2, .market-container h2, .basket-container h2, 
+    .profile-container h2, .card-container h2, .admin-container h2, 
+    .home-container h2 {
       margin-top: 0;
       color: #FFD700;
     }
@@ -78,10 +112,10 @@
     form input[type="submit"]:hover, button:hover {
       background: #e6c200;
     }
-    /* Ապրանքների ոճեր */
+    /* Product Styles */
     .products {
       display: grid;
-      grid-template-columns: repeat(4, 1fr); /* Մակսիմում 4 ապրանք մեկ տողում */
+      grid-template-columns: repeat(4, 1fr);
       gap: 20px;
     }
     .product {
@@ -103,7 +137,7 @@
     .product p {
       margin: 8px 0;
     }
-    /* Զամբյուղի ցուցակը */
+    /* Basket Styles */
     .basket-container ul {
       list-style: none;
       padding: 0;
@@ -115,38 +149,63 @@
       justify-content: space-between;
       align-items: center;
     }
-    .logout {
-      cursor: pointer;
-      text-decoration: underline;
-      font-size: 14px;
-      margin-left: 10px;
-      color: #FFD700;
-    }
-    /* Վեբ էջի բաժինները */
+    /* Section visibility */
     .nav-section {
       display: none;
     }
     .active-section {
       display: block;
     }
+    /* Footer */
+    .footer {
+      margin-top: 20px;
+      padding: 20px;
+      text-align: center;
+      border-top: 1px solid #FFD700;
+    }
   </style>
 </head>
 <body>
   <header>
-    <h1>Գեղեցիկ Տեղական Առևտր</h1>
-    <nav>
-      <a href="#" onclick="showSection('market')">Ապրանքներ</a>
-      <a href="#" onclick="showSection('basket')">Զամբյուղ</a>
-      <a href="#" onclick="showSection('profile')">Պրոֆիլ</a>
-      <a href="#" onclick="showSection('card')">Քարտի Հեղինակագիր</a>
-      <span id="userStatus"></span>
+    <!-- Main title links to home -->
+    <h1 onclick="showSection('home')">Մարկետ</h1>
+    <nav id="mainNav">
+      <button class="nav-toggle" onclick="toggleDropdown()">Մենյու</button>
+      <div id="navDropdown" class="nav-dropdown">
+        <a href="#" onclick="showSection('market'); toggleDropdown()">Ապրանքներ</a>
+        <a href="#" onclick="showSection('basket'); toggleDropdown()">Զամբյուղ</a>
+        <a href="#" onclick="showSection('profile'); toggleDropdown()">Պրոֆիլ</a>
+        <a href="#" onclick="showSection('card'); toggleDropdown()">Քարտի Հեղինակագիր</a>
+        <!-- If a user is logged in, a simple "Դուրս գալ" link will appear here -->
+        <span id="userStatus"></span>
+      </div>
     </nav>
   </header>
   
   <div class="container">
-    <!-- Մուտք և Գրանցման բաժին -->
-    <div id="authSection" class="nav-section active-section">
-      <!-- Մուտք (Login) ձև -->
+    <!-- Home Section -->
+    <div id="home" class="nav-section active-section">
+      <div class="home-container">
+        <h2>Բարի գալուստ Մարկետ</h2>
+        <p>Մենք նվիրված ենք տեղական ապրանքների մատուցմանը բարձր որակով, հիմնվելով նրանց ինքնօրինակ ձևով ու գեղեցիկ դիզայնով:</p>
+        <p><strong>Որտեղ ենք ստանում մեր ապրանքները:</strong></p>
+        <p>Մեր մատակարարվող ապրանքները ստանում ենք տեղական արտադրողների և արհեստական գործարանների ծառայություններից, որոնք ունեն խորը պատմություն և պարգևում են բացառիկ, ձեռոցագործ և բնական նյութերով պատրաստված ապրանքներ:</p>
+        <p><strong>Ապրանքների որակը:</strong></p>
+        <p>Բոլոր ապրանքները անցնում են բազմազան որակի ստանդարտներ՝ ներառյալ բնական նյութերի բարձր որակը, ձեռոցագործ ստեղծագործությունները, հետաքրքիր դիզայնը և նորարար մոտեցումները:</p>
+        <p><strong>Մեր մոտեցումն:</strong></p>
+        <p>Մենք հավատում ենք, որ անձնական սպասարկումը և բարձր որակը պետք է ձեռնամուխ լինեն բավարարված հաճախորդներին, ուստի մեր հավաքածուի կառավարումը կատարվում է զգալի մոտեցումներով ինչպես հաճախորդների, այնպես էլ մեր արտադրողների նկատմամբ:</p>
+        <p>Ստեղծող՝ <strong>Պողոսյան Տիգրան</strong></p>
+        <div class="footer">
+          <p><strong>Մեր գրասենյակը գտնվում է Փարիզում:</strong></p>
+          <p>Հասցե՝ 123 Boulevard de Paris, 75000 Paris, France</p>
+          <p>Կապ․ էլ. հասցե՝ contact@geghatsiktrade.example | Հեռ․ +33 1 23 45 67 89</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Authentication Section -->
+    <div id="authSection" class="nav-section">
+      <!-- Login Form -->
       <div class="form-container" id="loginFormContainer">
         <h2>Մուտք</h2>
         <form id="loginForm">
@@ -156,7 +215,7 @@
         </form>
         <p>Դուք գրանցված չեք? <a href="#" onclick="toggleAuthForms()">Գրանցում</a></p>
       </div>
-      <!-- Գրանցման (Sign Up) ձև -->
+      <!-- Sign Up Form -->
       <div class="form-container" id="signupFormContainer" style="display:none;">
         <h2>Գրանցում</h2>
         <form id="signupForm">
@@ -169,17 +228,17 @@
       </div>
     </div>
     
-    <!-- Ապրանքների բաժին -->
+    <!-- Market Section -->
     <div id="market" class="nav-section">
       <div class="market-container">
         <h2>Ապրանքներ</h2>
         <div class="products" id="productsList">
-          <!-- Ապրանքները կցուցադրվեն այստեղ -->
+          <!-- Products will appear here -->
         </div>
       </div>
     </div>
     
-    <!-- Զամբյուղի բաժին -->
+    <!-- Basket Section -->
     <div id="basket" class="nav-section">
       <div class="basket-container">
         <h2>Ձեր Զամբյուղը</h2>
@@ -188,7 +247,7 @@
       </div>
     </div>
     
-    <!-- Պրոֆիլի բաժին -->
+    <!-- Profile Section -->
     <div id="profile" class="nav-section">
       <div class="profile-container">
         <h2>Ձեր Պրոֆիլը</h2>
@@ -198,7 +257,7 @@
       </div>
     </div>
     
-    <!-- Քարտի տեղեկատվության բաժին -->
+    <!-- Card Details Section -->
     <div id="card" class="nav-section">
       <div class="card-container">
         <h2>Քարտի Մանրամասներ</h2>
@@ -211,17 +270,35 @@
         </form>
       </div>
     </div>
+    
+    <!-- Admin Panel Section -->
+    <div id="admin" class="nav-section">
+      <div class="admin-container">
+        <h2>Ադմին պանել</h2>
+        <div id="registeredUsers">
+          <h3>Գրանցված Օգտագործողները</h3>
+          <ul id="usersList"></ul>
+        </div>
+        <div id="editProducts">
+          <h3>Փոփոխել Ապրանքները</h3>
+          <div id="adminProductsList"></div>
+        </div>
+      </div>
+    </div>
+    
   </div>
 
   <script>
-    // Տեղական կիրառման համար, այս վերսիան պահում է բոլոր տվյալները RAM-ում:
+    // All data stored in RAM
     let currentUser = null;
-    const users = []; // Գրանցված օգտատերերը
-
-    // Զամբյուղի տվյալների մասիվ
+    const users = [];
+    
+    // Predefined admin user
+    users.push({ username: "admin", email: "admin@example.com", password: "admin123", card: null, admin: true });
+    
     let basket = [];
-
-    // Սահմանում ենք 80 ապրանք տարբեր կատեգորիաներով:
+    
+    // Create 80 products across categories
     const categories = ['Գիրքեր', 'Էլեկտրոնիկա', 'Հագուստ', 'Ակսեսուարներ'];
     const products = [];
     for(let i = 1; i <= 80; i++){
@@ -234,7 +311,7 @@
       });
     }
     
-    // Login/Sign Up ձևերի փոխում
+    // Toggle between login and sign-up forms
     function toggleAuthForms() {
       const loginContainer = document.getElementById('loginFormContainer');
       const signupContainer = document.getElementById('signupFormContainer');
@@ -247,16 +324,26 @@
       }
     }
     
-    // Ցուցադրման բաժինները փոխելու ֆունկցիա
-    function showSection(sectionId) {
-      const sections = document.querySelectorAll('.nav-section');
-      sections.forEach(section => {
-        section.classList.remove('active-section');
-      });
-      document.getElementById(sectionId).classList.add('active-section');
+    // Toggle the dropdown menu
+    function toggleDropdown() {
+      const dropdown = document.getElementById("navDropdown");
+      dropdown.style.display = (dropdown.style.display === "flex") ? "none" : "flex";
     }
     
-    // Ապրանքների ցուցադրման ֆունկցիա
+    // Show section with access check for profile
+    function showSection(sectionId) {
+      if (sectionId === 'profile' && !currentUser) {
+        alert('Խնդրում ենք մուտք գործել՝ ձեր պրոֆիլի համար:');
+        sectionId = 'authSection';
+      }
+      const sections = document.querySelectorAll('.nav-section');
+      sections.forEach(section => section.classList.remove('active-section'));
+      document.getElementById(sectionId).classList.add('active-section');
+      // Hide dropdown after selection
+      document.getElementById("navDropdown").style.display = "none";
+    }
+    
+    // Render products in the market section
     function renderProducts() {
       const productsList = document.getElementById('productsList');
       productsList.innerHTML = '';
@@ -273,7 +360,7 @@
       });
     }
     
-    // Ապրանքի ավելացում զամբյուղում
+    // Add product to basket
     function addToBasket(productId) {
       const product = products.find(p => p.id === productId);
       if (product) {
@@ -282,7 +369,7 @@
       }
     }
     
-    // Զամբյուղի տարրերի ցուցադրում
+    // Render basket items
     function renderBasket() {
       const basketItems = document.getElementById('basketItems');
       basketItems.innerHTML = '';
@@ -293,13 +380,13 @@
       });
     }
     
-    // Զամբյուղից տարր հեռացնել
+    // Remove item from basket
     function removeFromBasket(index) {
       basket.splice(index, 1);
       renderBasket();
     }
     
-    // Վճարման ժամանակ՝ ստուգում ենք արդյոք օգտագործողը ունի քարտի տվյալներ:
+    // Checkout process
     document.getElementById('checkoutBtn').addEventListener('click', () => {
       if (basket.length === 0) {
         alert('Ձեր զամբյուղը դատարկ է:');
@@ -311,7 +398,6 @@
       }
       if (!currentUser.card) {
         alert('Վճարման համար անհրաժեշտ է քարտի տվյալներ: Խնդրում ենք լրացնել ձեր քարտի տեղեկությունները:');
-        // նավիգացիա քարտի էջին
         showSection('card');
         return;
       }
@@ -320,7 +406,7 @@
       renderBasket();
     });
     
-    // Մուտքի ձևի հղում
+    // Login form submission
     document.getElementById('loginForm').addEventListener('submit', (e) => {
       e.preventDefault();
       const username = document.getElementById('loginUsername').value;
@@ -334,7 +420,7 @@
       }
     });
     
-    // Գրանցման ձևի հղում
+    // Sign up form submission
     document.getElementById('signupForm').addEventListener('submit', (e) => {
       e.preventDefault();
       const username = document.getElementById('signupUsername').value;
@@ -344,13 +430,13 @@
         alert('Օգտագործողի անունը արդեն զբաղված է:');
         return;
       }
-      const newUser = { username, email, password, card: null };
+      const newUser = { username, email, password, card: null, admin: false };
       users.push(newUser);
       currentUser = newUser;
       onLoginSuccess();
     });
     
-    // Քարտի մանրամասների ձևի հղում
+    // Card details form submission
     document.getElementById('cardForm').addEventListener('submit', (e) => {
       e.preventDefault();
       if (!currentUser) {
@@ -365,21 +451,91 @@
       alert('Քարտի տվյալները պահպանված են:');
     });
     
-    // Հաջող մուտք/գրանցում
+    // On successful login/sign-up
     function onLoginSuccess() {
       document.getElementById('authSection').style.display = 'none';
-      document.getElementById('userStatus').innerHTML = `Մուտք գործած է՝ <strong>${currentUser.username}</strong> (<span class="logout" onclick="logout()">Դուրս գալ</span>)`;
+      // Instead of displaying full status text, simply add a "Դուրս գալ" link
+      document.getElementById('userStatus').innerHTML = `<a href="#" onclick="logout(); toggleDropdown()">Դուրս գալ</a>`;
       document.getElementById('profileUsername').innerText = currentUser.username;
       document.getElementById('profileEmail').innerText = currentUser.email;
       renderProducts();
+      if (currentUser.admin) {
+        addAdminNavLink();
+      }
       showSection('market');
     }
     
-    // Դուրս գալ համակարգը
+    // Logout function
     function logout() {
       currentUser = null;
       basket = [];
       location.reload();
+    }
+    
+    // Append admin link inside dropdown if user is admin
+    function addAdminNavLink() {
+      const navDropdown = document.getElementById("navDropdown");
+      if (!document.querySelector('a.admin-link')) {
+        const adminLink = document.createElement('a');
+        adminLink.href = "#";
+        adminLink.className = "admin-link";
+        adminLink.innerText = "Ադմին";
+        adminLink.onclick = () => {
+          renderUsersList();
+          renderAdminProducts();
+          showSection('admin');
+        };
+        navDropdown.appendChild(adminLink);
+      }
+    }
+    
+    // Render list of registered users (Admin Panel)
+    function renderUsersList() {
+      const usersList = document.getElementById('usersList');
+      usersList.innerHTML = '';
+      users.forEach(u => {
+        const li = document.createElement('li');
+        li.innerText = `Օգտագործող՝ ${u.username} | Էլ. հասցե՝ ${u.email}${u.admin ? ' (Ադմին)' : ''}`;
+        usersList.appendChild(li);
+      });
+    }
+    
+    // Render products for admin editing
+    function renderAdminProducts() {
+      const adminProductsList = document.getElementById('adminProductsList');
+      adminProductsList.innerHTML = '';
+      products.forEach(product => {
+        const prodDiv = document.createElement('div');
+        prodDiv.style.border = "1px solid #FFD700";
+        prodDiv.style.marginBottom = "10px";
+        prodDiv.style.padding = "10px";
+        prodDiv.innerHTML = `
+          <p>ID: ${product.id}</p>
+          <p>Անուն: <span id="name-${product.id}">${product.name}</span></p>
+          <p>Կատեգորիա: <span id="category-${product.id}">${product.category}</span></p>
+          <p>Գին: $<span id="price-${product.id}">${product.price}</span></p>
+          <button onclick="editProduct(${product.id})">Խմբագրել</button>
+        `;
+        adminProductsList.appendChild(prodDiv);
+      });
+    }
+    
+    // Edit product function for admin
+    function editProduct(productId) {
+      const product = products.find(p => p.id === productId);
+      if (!product) return;
+      
+      const newName = prompt("Նոր անունը", product.name);
+      const newCategory = prompt("Նոր կատեգորիան", product.category);
+      const newPrice = prompt("Նոր գին", product.price);
+      
+      if (newName && newCategory && newPrice) {
+        product.name = newName;
+        product.category = newCategory;
+        product.price = parseFloat(newPrice).toFixed(2);
+        renderProducts();
+        renderAdminProducts();
+      }
     }
   </script>
 </body>
